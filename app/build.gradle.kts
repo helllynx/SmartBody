@@ -4,6 +4,8 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    kotlin("android.extensions")
+    id("dagger.hilt.android.plugin")
     id("androidx.navigation.safeargs.kotlin")
 }
 
@@ -22,6 +24,7 @@ android {
     }
 
     buildFeatures.viewBinding = true
+    buildFeatures.dataBinding = true
 
     signingConfigs {
         val localProperties = File("${rootDir.path}/local.properties").run {
@@ -69,9 +72,19 @@ android {
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+                    getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
+    }
+
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
+
+    packagingOptions {
+        // kapt
+        exclude("META-INF/gradle/incremental.annotation.processors")
     }
 
     compileOptions {
@@ -90,18 +103,65 @@ dependencies {
     // region Kotlin
     val kotlinVersion: String by project
     implementation(kotlin("stdlib-jdk8", kotlinVersion))
+    val coroutinesVersion: String by project
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+    // endregion
+
+    // region Hilt
+    val hiltVersion: String by project
+    val hiltJetpackVersion: String by project
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
+
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:$hiltJetpackVersion")
+    kapt("androidx.hilt:hilt-compiler:$hiltJetpackVersion")
+    implementation("androidx.fragment:fragment-ktx:1.3.0-rc01")
+
+    androidTestImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    kaptAndroidTest("androidx.hilt:hilt-compiler:$hiltJetpackVersion")
+    // endregion
+
+    // region Room
+    val roomVersion: String by project
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
     // endregion
 
     // region AndroidX
+    val lifecycleVersion: String by project
+    implementation("androidx.lifecycle:lifecycle-livedata:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
     val navigationVersion: String by project
-    implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
-    implementation("androidx.preference:preference:1.1.1")
-    implementation("androidx.preference:preference:1.1.1")
-    implementation("androidx.core:core-ktx:1.3.2")
-    implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-    implementation("com.google.android.material:material:1.3.0-beta01")
+    val preferenceVersion: String by project
+    implementation("androidx.preference:preference:$preferenceVersion")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    val espressoVersion: String by project
+    implementation("androidx.test.espresso:espresso-idling-resource:$espressoVersion")
+    // endregion
+
+    // region time
+    val jodaTimeVersion: String by project
+    implementation("joda-time:joda-time:$jodaTimeVersion")
+    // endregion
+
+    // region UI
+    val materialVersion: String by project
+    implementation("com.google.android.material:material:$materialVersion")
+    val constraintVersion: String by project
+    implementation("androidx.constraintlayout:constraintlayout:$constraintVersion")
+    val horizontalCalendarVersion: String by project
+    implementation("devs.mulham.horizontalcalendar:horizontalcalendar:$horizontalCalendarVersion")
+    // endregion
+
+    // region Timber
+    val timberVersion: String by project
+    implementation("com.jakewharton.timber:timber:$timberVersion")
     // endregion
 }

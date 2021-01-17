@@ -1,6 +1,6 @@
 plugins {
 //    id("io.gitlab.arturbosch.detekt") version "1.12.0"
-    kotlin("plugin.serialization") version "1.4.10"
+    kotlin("plugin.serialization") version "1.4.20"
 }
 
 buildscript {
@@ -10,11 +10,13 @@ buildscript {
     }
     dependencies {
         val kotlinVersion: String by project
-
-        classpath("com.android.tools.build:gradle:4.2.0-beta02")
+        classpath("com.android.tools.build:gradle:4.2.0-beta03")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion")
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.3.2")
+
+        val hiltVersion: String by project
+        classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
     }
 }
 
@@ -22,7 +24,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven("https://jitpack.io")
+        maven(url = "https://jitpack.io")
     }
 }
 

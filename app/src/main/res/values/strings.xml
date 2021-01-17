@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SmartBody</string>
+    <string name="app_name">Smart Body</string>
+    <string name="settings_title">Settings</string>
+    <string name="pf_gender">Gender</string>
+    <string name="pf_age">Age</string>
 </resources>
